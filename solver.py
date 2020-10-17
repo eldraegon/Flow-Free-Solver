@@ -221,18 +221,16 @@ def solve_console():
             lines = datafile.readlines()
             for line in lines:
                 points.append(json.loads(line))
+            print("Input: \n")
+            print_input(points, length)
+            solution = Solution(points, length)
+            start = time.time()
+            solution.solve()
+            end = time.time()
+            print("\nSolved in {:.3f} Seconds!\n".format(end - start))
+            print_table(solution.output)
     except FileNotFoundError:
         print("Error: data.txt file not detected!")
-        exit()
-    finally:
-        print("Input: \n")
-        print_input(points, length)
-        solution = Solution(points, length)
-        start = time.time()
-        solution.solve()
-        end = time.time()
-        print("\nSolved in {:.3f} Seconds!\n".format(end - start))
-        print_table(solution.output)
 
 
 def print_input(points, length):  # this function prints the input to console given by the user
