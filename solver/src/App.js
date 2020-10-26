@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import FlowFreeSolver from './FlowFreeSolver';
+import FlowFreeSolver from './FlowFreeSolver/FlowFreeSolver';
 
 function App() {
   return (

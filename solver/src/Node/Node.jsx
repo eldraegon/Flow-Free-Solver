@@ -9,6 +9,8 @@ export default class Node extends Component {
     }
 
     render() {
-        return <div className="node"></div>
+        const {isFinish, isStart} = this.props;
+        const extraClassName = isFinish ? 'colorRed' : isStart ? "colorBlue" : "";
+        return <div className={`node ${extraClassName}`}></div>
     }
 }

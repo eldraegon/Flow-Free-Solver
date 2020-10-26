@@ -4,3 +4,24 @@
     outline: 1px solid grey;
     display: inline-block;
 }
+.colorBlue {
+    background-color: blue;
+}
+.colorRed {
+    background-color: red;
+}
+.colorGreen {
+    background-color: green;
+}
+.colorOrange {
+    background-color: orange;
+}
+.colorYellow {
+    background-color: yellow;
+}
+.colorWhite {
+    background-color: white;
+}
+.colorGrey {
+    background-color: grey;
+}
