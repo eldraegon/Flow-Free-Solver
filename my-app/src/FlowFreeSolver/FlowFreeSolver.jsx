@@ -1,7 +1,7 @@
-import { Button } from 'bootstrap';
 import React, {Component} from 'react'
-import Node from '../Node/Node'
+import Node from './Node/Node'
 import './FlowFreeSolver.css'
+import { Button, ButtonGroup } from 'react-bootstrap';
 
 export default class FlowFreeSolver extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ export default class FlowFreeSolver extends Component {
                     col,
                     row,
                     isStart: row === 5 && col === 0,
-                    isFinish: row === 5 && col === 10,
+                    isFinish: row === 5 && col === 9,
                 };
                 currentRow.push(Node);
             }
@@ -34,22 +34,21 @@ export default class FlowFreeSolver extends Component {
         const {nodes} = this.state;
         const navButtons = [];
         for(let i = 5; i <= 15; i++) {
-            navButtons.push(<Button variant="primary">test</Button> );
+            navButtons.push(<Button className="Button">{i} x {i}</Button>);
         }
 
         return (
             <div className="grid">
                 <div className="nav">
-                    <nav>
+                    <ButtonGroup>
                         {navButtons}
-                    </nav>
+                    </ButtonGroup>
                 </div>
                 {nodes.map((row, rowIdx) => {
                     return(
                         <div key={rowIdx}>
                             {row.map((node, nodeIdx) => {
                                 const {isStart, isFinish} = node
-                                console.log(isStart);
                                 return (
                                     <Node 
                                     key={nodeIdx}

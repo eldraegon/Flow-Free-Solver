@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-
 import './Node.css'
 
 export default class Node extends Component {
@@ -10,7 +9,7 @@ export default class Node extends Component {
 
     render() {
         const {isFinish, isStart} = this.props;
-        const extraClassName = isFinish ? 'colorRed' : isStart ? "colorBlue" : "";
+        const extraClassName = isFinish ? "colorRed" : isStart ? "colorBlue" : "";
         return <div className={`node ${extraClassName}`}></div>
     }
 }
