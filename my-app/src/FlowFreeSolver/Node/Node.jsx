@@ -15,14 +15,14 @@ export default class Node extends Component {
                 6: "colorWhite",
                 7: "colorGrey",
             },
-            n: 0,
         };
     }
-
     render() {
-        const {color, n} = this.state;
-        const {size} = this.props;
+        const {color} = this.state;
+        const {size, n, row, col, onClick} = this.props;
         const gridSize = size < 8? "lg" : size < 11? "md" : "sm";
-        return <div className={`node ${color[n]} ${gridSize}`}></div>
+        return <div className={`node ${color[n]} ${gridSize}`}
+        onClick={() => onClick(row, col)}
+        ></div>
     }
 }
