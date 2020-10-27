@@ -10,26 +10,36 @@ export default class FlowFreeSolver extends Component {
             nodes: [],
             length: 10,
             size: 'lg',
-            endpointStack: {
-                stackArray: [7,7,6,6,5,5,4,4,3,3,2,2,1,1],
-                stackTop: 13,
-            },
+            navButtons: [],
+            endpointStack: [7,7,6,6,5,5,4,4,3,3,2,2,1,1],
         };
     }
 
     componentDidMount() {
         this.createGrid(10);
+        const navButtons = [];
+        for(let i = 5; i <= 15; i++) {
+            navButtons.push(<Button key={i} variant="secondary" onClick={() => this.setGrid(i)}>{i}x{i}</Button>);
+        }
+        this.setState({navButtons});
     }
 
     onClick(row, col) {
-        const {nodes} = this.state;
-        let {endpointStack} = this.state;
-        let {stackArray, stackTop} = endpointStack;
-        if(nodes[row][col] !== 0) {
-            stackArray.pop();
-            stackTop--;
-            console.log("did it!");
+        let {nodes, endpointStack} = this.state;
+        let {n} = nodes[row][col];
+        let {length} = endpointStack;
+        if(length === 0 && n === 0) {
+
+            return;
         }
+        if(n === 0) {
+            n = endpointStack.pop();
+        }else {
+            endpointStack.push(n);
+            n = 0;
+        }
+        nodes[row][col] = {n};
+        this.setState({nodes, endpointStack});
     }
     
     createGrid(length) {
@@ -56,11 +66,7 @@ export default class FlowFreeSolver extends Component {
     }
 
     render() {
-        const {nodes, length} = this.state;
-        const navButtons = [];
-        for(let i = 5; i <= 15; i++) {
-            navButtons.push(<Button key={i} variant="secondary" onClick={() => this.setGrid(i)}>{i}x{i}</Button>);
-        }
+        const {nodes, length, navButtons} = this.state;
         return (
             <div className="grid">
                 <div className="nav">
@@ -69,7 +75,6 @@ export default class FlowFreeSolver extends Component {
                     </ButtonGroup>
                 </div>
                 {nodes.map((row, rowIdx) => {
-
                     return(
                         <div key={rowIdx}>
                             {row.map((node, nodeIdx) => {
@@ -81,7 +86,7 @@ export default class FlowFreeSolver extends Component {
                                     key={nodeIdx}
                                     size={length}
                                     n={n}
-                                    onClick={this.onClick}
+                                    onClick={(row, col) => this.onClick(row, col)}
                                     ></Node>
                                 );
                             })}
