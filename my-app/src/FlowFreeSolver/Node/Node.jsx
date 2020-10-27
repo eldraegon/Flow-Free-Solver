@@ -4,12 +4,25 @@ import './Node.css'
 export default class Node extends Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {
+            color: {
+                0: "",
+                1: "colorBlue",
+                2: "colorRed",
+                3: "colorGreen",
+                4: "colorOrange",
+                5: "colorYellow",
+                6: "colorWhite",
+                7: "colorGrey",
+            },
+            n: 0,
+        };
     }
 
     render() {
-        const {isFinish, isStart} = this.props;
-        const extraClassName = isFinish ? "colorRed" : isStart ? "colorBlue" : "";
-        return <div className={`node ${extraClassName}`}></div>
+        const {color, n} = this.state;
+        const {size} = this.props;
+        const gridSize = size < 8? "lg" : size < 11? "md" : "sm";
+        return <div className={`node ${color[n]} ${gridSize}`}></div>
     }
 }

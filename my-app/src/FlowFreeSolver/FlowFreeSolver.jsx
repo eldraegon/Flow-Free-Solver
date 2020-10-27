@@ -2,9 +2,7 @@ import React, {Component} from 'react'
 import Node from './Node/Node'
 import './FlowFreeSolver.css'
 import { Button, ButtonGroup } from 'react-bootstrap';
-function test(num) {
-    console.log("TEST")
-}
+
 export default class FlowFreeSolver extends Component {
     constructor(props) {
         super(props);
@@ -43,7 +41,7 @@ export default class FlowFreeSolver extends Component {
     }
 
     render() {
-        const {nodes} = this.state;
+        const {nodes, length} = this.state;
         const navButtons = [];
         for(let i = 5; i <= 15; i++) {
             navButtons.push(<Button key={i} variant="secondary" onClick={() => this.setGrid(i)}>{i}x{i}</Button>);
@@ -56,18 +54,16 @@ export default class FlowFreeSolver extends Component {
                     </ButtonGroup>
                 </div>
                 {nodes.map((row, rowIdx) => {
+
                     return(
                         <div key={rowIdx}>
                             {row.map((node, nodeIdx) => {
-                                const {isStart, isFinish} = node
-                                const {size} = this.state;
                                 return (
                                     <Node 
                                     key={nodeIdx}
-                                    isStart={isStart}
-                                    isFinish={isFinish}
-                                    size={size}>
-                                    </Node>
+                                    size={length}
+
+                                    ></Node>
                                 );
                             })}
                         </div>
@@ -76,4 +72,12 @@ export default class FlowFreeSolver extends Component {
             </div>
         );
     }
+}
+
+class ClauseGenerator {
+
+}
+
+class SATSolver {
+
 }
