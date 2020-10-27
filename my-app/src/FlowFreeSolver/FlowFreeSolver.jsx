@@ -8,7 +8,7 @@ export default class FlowFreeSolver extends Component {
         super(props);
         this.state = {
             nodes: [],
-            length: 10,
+            length: 5,
             size: 'lg',
             navButtons: [],
             endpointStack: [7,7,6,6,5,5,4,4,3,3,2,2,1,1],
@@ -16,7 +16,7 @@ export default class FlowFreeSolver extends Component {
     }
 
     componentDidMount() {
-        this.createGrid(10);
+        this.createGrid(5);
         const navButtons = [];
         for(let i = 5; i <= 15; i++) {
             navButtons.push(<Button key={i} variant="secondary" onClick={() => this.changeGridSize(i)}>{i}x{i}</Button>);
@@ -41,18 +41,23 @@ export default class FlowFreeSolver extends Component {
         nodes[row][col] = {n};
         this.setState({nodes, endpointStack});
     }
+
     changeGridSize(length) {
         this.createGrid(length);
-        this.refreshGrid();
+        this.refreshEndpointStack();
     }
 
-    refreshGrid() {
+    refreshEndpointStack() {
         const endpointStack = [7,7,6,6,5,5,4,4,3,3,2,2,1,1];
         this.setState({endpointStack});
-        const {length} = this.state;
-        this.createGrid(length);
     }
     
+    refreshButtonOnClick() {
+        const {length} = this.state;
+        this.createGrid(length);
+        this.refreshEndpointStack();
+    }
+
     createGrid(length) {
         const nodes = []
         for(let row = 0; row < length; row++) {
@@ -75,36 +80,41 @@ export default class FlowFreeSolver extends Component {
             this.createGrid(length);
         }
     }
-
+    solve() {
+        
+    }
     render() {
         const {nodes, length, navButtons} = this.state;
         return (
-            <div className="grid">
+            <div>
                 <div className="nav">
                     <ButtonGroup className="btn">
                         {navButtons}
-                        <Button variant="secondary" onClick={() => this.refreshGrid()}>Refresh</Button>
+                        <Button variant="secondary" onClick={() => this.refreshButtonOnClick()}>Refresh</Button>
                     </ButtonGroup>
                 </div>
-                {nodes.map((row, rowIdx) => {
-                    return(
-                        <div key={rowIdx}>
-                            {row.map((node, nodeIdx) => {
-                                const {n} = node;
-                                return (
-                                    <Node 
-                                    row={rowIdx}
-                                    col={nodeIdx}
-                                    key={nodeIdx}
-                                    size={length}
-                                    n={n}
-                                    onClick={(row, col) => this.onClick(row, col)}
-                                    ></Node>
-                                );
-                            })}
-                        </div>
-                    );
-                })}
+                <div >
+                    {nodes.map((row, rowIdx) => {
+                        return(
+                            <div key={rowIdx}>
+                                {row.map((node, nodeIdx) => {
+                                    const {n} = node;
+                                    return (
+                                        <Node 
+                                        row={rowIdx}
+                                        col={nodeIdx}
+                                        key={nodeIdx}
+                                        size={length}
+                                        n={n}
+                                        onClick={(row, col) => this.onClick(row, col)}
+                                        ></Node>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
+                </div>
+                <Button className="btn" variant="danger" onClick={() => this.solve()}> Solve! </Button>
             </div>
         );
     }

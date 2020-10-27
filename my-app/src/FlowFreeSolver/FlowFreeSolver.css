@@ -5,3 +5,12 @@
 .nav {
     padding: 1%;
 }
+.row {
+    text-align: center;
+    padding: 0px;
+}
+.grid {
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+}
