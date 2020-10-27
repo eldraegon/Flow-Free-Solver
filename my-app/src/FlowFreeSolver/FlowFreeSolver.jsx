@@ -1,7 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Node from './Node/Node'
+import constructClauses from '../Algorithms/constructClauses'
+import solver from '../Algorithms/solver'
 import './FlowFreeSolver.css'
-import {Button, ButtonGroup} from 'react-bootstrap';
+import { Alert, Button, ButtonGroup } from 'react-bootstrap';
 
 export default class FlowFreeSolver extends Component {
     constructor(props) {
@@ -12,6 +14,8 @@ export default class FlowFreeSolver extends Component {
             size: 'lg',
             navButtons: [],
             endpointStack: [7,7,6,6,5,5,4,4,3,3,2,2,1,1],
+            maxEndpoint: 14,
+            alert: undefined,
         };
     }
 
@@ -19,7 +23,10 @@ export default class FlowFreeSolver extends Component {
         this.createGrid(5);
         const navButtons = [];
         for(let i = 5; i <= 15; i++) {
-            navButtons.push(<Button key={i} variant="secondary" onClick={() => this.changeGridSize(i)}>{i}x{i}</Button>);
+            navButtons.push(<Button 
+                key={i} 
+                variant="secondary" 
+                onClick={() => this.changeGridSize(i)}>{i}x{i}</Button>);
         }
         this.setState({navButtons});
     }
@@ -80,17 +87,40 @@ export default class FlowFreeSolver extends Component {
             this.createGrid(length);
         }
     }
+
+    appendInvalidInputAlert() {
+        const alert = <Alert 
+        variant="danger"
+        onClose={() => this.removeInvalidInputAlert()} 
+        dismissible><h6>Invalid Endpoint Configuration!</h6></Alert>
+        this.setState({alert});
+    }
+
+    removeInvalidInputAlert() {
+        const alert = undefined;
+        this.setState({alert});
+
+    }
+    
     solve() {
-        
+        const {endpointStack, nodes, maxEndpoint} = this.state;
+        const {length} = endpointStack;
+        if(length % 2 !== 0 || length === maxEndpoint) {
+            this.appendInvalidInputAlert();
+        }else {
+            let clauses = new constructClauses(nodes, maxEndpoint-length-1);
+        }
     }
     render() {
-        const {nodes, length, navButtons} = this.state;
+        const {nodes, length, navButtons, alert} = this.state;
         return (
             <div>
+                {alert}
                 <div className="nav">
                     <ButtonGroup className="btn">
                         {navButtons}
-                        <Button variant="secondary" onClick={() => this.refreshButtonOnClick()}>Refresh</Button>
+                        <Button variant="secondary" 
+                        onClick={() => this.refreshButtonOnClick()}>Refresh</Button>
                     </ButtonGroup>
                 </div>
                 <div >
@@ -106,15 +136,17 @@ export default class FlowFreeSolver extends Component {
                                         key={nodeIdx}
                                         size={length}
                                         n={n}
-                                        onClick={(row, col) => this.onClick(row, col)}
-                                        ></Node>
+                                        onClick={(row, col) => this.onClick(row, col)}></Node>
                                     );
                                 })}
                             </div>
                         );
                     })}
                 </div>
-                <Button className="btn" variant="danger" onClick={() => this.solve()}> Solve! </Button>
+                <Button 
+                className="btn" 
+                variant="primary" 
+                onClick={() => this.solve()}> Solve! </Button>
             </div>
         );
     }
