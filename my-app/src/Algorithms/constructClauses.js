@@ -40,16 +40,59 @@ export default class constructClauses {
         return n + (x * length * c) + (y * c) + type + 1;
     }
 
+    addSingleDirectionClause(i, j) {
+        const {cnf} = this;
+        const clause = [];
+        for(let t = 0; t < 6; t++) {
+            clause.push(this.getDirection(i, j, t));
+        }
+        cnf.append(clause);
+        for(let t = 0; t < 6; t++) {
+            for(let u = t + 1; u < 6; u++) {
+                cnf.push([this.getDirection(i, j, t) * -1, this.getDirection(i, j, u) * -1]);
+            }
+        }
+    }
+    
+    addDirectionClause(i, j) {
+
+    }
+
     addCellClause(i, j) {
-        const {length} = this;
+        const {cnf, c} = this;
         const clause = []
         for(let k = 0; k < this.c; k++) {
             clause.push(this.getCell(i, j, k));
         }
+        cnf.push(clause);
+        for(let k = 0; k < c; k++) {
+            for(let l = k+1; l < c; l++) {
+                cnf.push([this.getCell(i, j, k) * -1, this.getCell(i, j, l) * -1]);
+            }
+        }
+        this.addDirectionClause(i, j);
     }
 
-    addEndpointClause(i, j, n) {
-
+    addEndpointClause(i, j, color) {
+        const {cnf, c} = this;
+        cnf.push([this.getCell(i, j, color)]);
+        for(let k = 0; k < c; k++) {
+            if(k !== color) {
+                cnf.push([this.getCell(i, j, k) * -1]);
+            }
+        }
+        const clause = [];
+        this.getAdjacentNeighbors((i, j).forEach(coordinates => {
+            clause.push(this.getCell(coordinates[0], coordinates[1], color));
+        }));
+        cnf.push(clause);
+        this.getAdjacentNeighbors(i, j).forEach((firstCoordinates, idx) => {
+            this.getAdjacentNeighbors(i, j).slice(idx + 1).forEach(secondCoordinates => {
+                //TODO: check if right (idx + 1 or idx)
+                cnf.push([this.getCell(firstCoordinates[0], firstCoordinates[1], color) * -1,
+                this.getCell(secondCoordinates[0], secondCoordinates[1]) * -1]);
+            });
+        });
     }
 
     generateClauses() {
