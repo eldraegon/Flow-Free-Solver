@@ -1,4 +1,5 @@
 export default class constructClauses {
+    
     constructor(nodes, c) {
         this.diff = [[0, 1], [1, 0], [-1, 0], [0, -1]];
         this.directions = {0: [[0, 1], [0, -1]],
@@ -15,18 +16,52 @@ export default class constructClauses {
             this.visited = [];
             this.clauses = [];
     }
+
     getAdjacentNeighbors(i, j) {
+        const {length} = this;
         const ret = [];
         this.diff.forEach(element => {
-            if(i + element[0] >= 0 && i + element[0] < this.length && j + element[1] >= 0 && j + element[1] < this.length) {
+            const differenceX = i + element[0];
+            const differenceY = j + element[1];
+            if(differenceX >= 0 && differenceX < length && differenceY >= 0 && differenceY < length) {
                 ret.push([i + element[0], j + element[1]]);
             }
         });
         return ret;
     }
 
-    
-    generateClauses() {
+    getCell(x, y, color) {
+        const {length, c} = this;
+        return (x * length * c) + (y * c) + color + 1;
+    }
 
+    getDirection(x, y, type) {
+        const {length, c, n} = this;
+        return n + (x * length * c) + (y * c) + type + 1;
+    }
+
+    addCellClause(i, j) {
+        const {length} = this;
+        const clause = []
+        for(let k = 0; k < this.c; k++) {
+            clause.push(this.getCell(i, j, k));
+        }
+    }
+
+    addEndpointClause(i, j, n) {
+
+    }
+
+    generateClauses() {
+        this.nodes.forEach((row, i) => {
+            row.forEach((node, j) => {
+                const n = {node};
+                if(n === 0) {
+                    this.addCellClause(i, j);
+                }else {
+                    this.addEndpointClause(i, j, n);
+                }
+            })
+        });
     }
 }
