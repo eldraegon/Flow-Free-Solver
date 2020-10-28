@@ -36,7 +36,7 @@ export default class FlowFreeSolver extends Component {
         let {n} = nodes[row][col];
         let {length} = endpointStack;
         if(length === 0 && n === 0) {
-
+            this.appendAlert("No more colors!", "danger");
             return;
         }
         if(n === 0) {
@@ -88,15 +88,15 @@ export default class FlowFreeSolver extends Component {
         }
     }
 
-    appendInvalidInputAlert() {
+    appendAlert(message, variant) {
         const alert = <Alert 
-        variant="danger"
-        onClose={() => this.removeInvalidInputAlert()} 
-        dismissible><h6>Invalid Endpoint Configuration!</h6></Alert>
+        variant={variant}
+        onClose={() => this.removeAlert()} 
+        dismissible><h6>{message}</h6></Alert>
         this.setState({alert});
     }
 
-    removeInvalidInputAlert() {
+    removeAlert() {
         const alert = undefined;
         this.setState({alert});
 
@@ -106,9 +106,10 @@ export default class FlowFreeSolver extends Component {
         const {endpointStack, nodes, maxEndpoint} = this.state;
         const {length} = endpointStack;
         if(length % 2 !== 0 || length === maxEndpoint) {
-            this.appendInvalidInputAlert();
+            this.appendAlert("Invalid Endpoint Configuration!", "danger");
         }else {
-            let clauses = new constructClauses(nodes, maxEndpoint-length-1);
+            var test = new constructClauses(nodes, maxEndpoint - length - 1);
+            test.generateClauses();
         }
     }
     render() {
@@ -146,7 +147,7 @@ export default class FlowFreeSolver extends Component {
                 <Button 
                 className="btn" 
                 variant="primary" 
-                onClick={() => this.solve()}> Solve! </Button>
+                onClick={() => this.solve()}>Solve!</Button>
             </div>
         );
     }
