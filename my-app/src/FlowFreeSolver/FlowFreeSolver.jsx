@@ -45,7 +45,7 @@ export default class FlowFreeSolver extends Component {
             endpointStack.push(n);
             n = 0;
         }
-        nodes[row][col] = {n};
+        nodes[row][col].n = n;
         this.setState({nodes, endpointStack});
     }
 
@@ -108,8 +108,9 @@ export default class FlowFreeSolver extends Component {
         if(length % 2 !== 0 || length === maxEndpoint) {
             this.appendAlert("Invalid Endpoint Configuration!", "danger");
         }else {
-            var test = new constructClauses(nodes, maxEndpoint - length - 1);
+            var test = new constructClauses(nodes, (maxEndpoint - length) / 2);
             test.generateClauses();
+            console.log(test.cnf);
         }
     }
     render() {
