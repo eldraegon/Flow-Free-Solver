@@ -1,3 +1,5 @@
+import SAT from "./SAT"
+
 export default class constructClauses {
     
     constructor(nodes, c) {
@@ -226,8 +228,54 @@ export default class constructClauses {
         });
     }
 
-    detectCycles() {
+    bfs(i, j) {
+        let {visited, output} = this;
+        let queue = [];
+        queue.push([i, j, []]);
+        while(queue.length !== 0) {
+            let currentNode = queue.shift();
+            if(visited.includes(currentNode.slice(0, 2))) {
+                return [true, output[currentNode[0]][currentNode[1]]];
+            }
+            visited.push(currentNode.slice(0, 2));
+            this.getAdjacentNeighbors(currentNode[0], currentNode[1]).forEach(neighbor => {  //TODO MAKE SURE CORRECT
+                if(output[currentNode[0]][currentNode[1]] === output[[neighbor[0]][neighbor[1]]]) {
+                    queue.push(neighbor[0], neighbor[1], currentNode.slice(0, 2));
+                }
+            });
+        }
+        return [false];
+    }
 
+    constructCycleClauses(value) {
+        const {length, output} = this;
+        let {clauses} = this;
+        for(let i = 0; i < length; i++) {
+            for(let j = 0; j < length; j++) {
+                if(output[i][j] === value) {
+                    clauses.push(this.getCell(i, j, value-1) * -1);
+                }
+            }
+        }
+    }
+
+    detectCycles() {
+        const {length} = this;
+        let {visited, clauses} = this;
+        visited = [];
+        clauses = [];
+        for(let i = 0; i < length; i++) {
+            for(let j = 0; j < length; j++) {
+                if(!visited.includes([i, j])) {
+                    let output = this.bfs(i, j);
+                    if(output[0]) {
+                        this.constructCycleClauses(output[1]);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     solve() {

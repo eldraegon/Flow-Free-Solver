@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import Node from './Node/Node'
 import solver from '../Algorithms/solver'
-import SAT from '../Algorithms/SAT'
 import './FlowFreeSolver.css'
 import { Alert, Button, ButtonGroup } from 'react-bootstrap';
 
