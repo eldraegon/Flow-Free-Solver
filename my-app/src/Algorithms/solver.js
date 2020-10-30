@@ -261,9 +261,9 @@ export default class constructClauses {
 
     detectCycles() {
         const {length} = this;
-        let {visited, clauses} = this;
+        let {visited} = this;
         visited = [];
-        clauses = [];
+        this.clauses = [];
         for(let i = 0; i < length; i++) {
             for(let j = 0; j < length; j++) {
                 if(!visited.includes([i, j])) {
