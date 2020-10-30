@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Node from './Node/Node'
-import constructClauses from '../Algorithms/constructClauses'
 import solver from '../Algorithms/solver'
+import SAT from '../Algorithms/SAT'
 import './FlowFreeSolver.css'
 import { Alert, Button, ButtonGroup } from 'react-bootstrap';
 
@@ -108,7 +108,7 @@ export default class FlowFreeSolver extends Component {
         if(length % 2 !== 0 || length === maxEndpoint) {
             this.appendAlert("Invalid Endpoint Configuration!", "danger");
         }else {
-            var test = new constructClauses(nodes, (maxEndpoint - length) / 2);
+            var test = new solver(nodes, (maxEndpoint - length) / 2);
             test.generateClauses();
             console.log(test.cnf);
         }
