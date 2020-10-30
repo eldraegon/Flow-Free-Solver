@@ -121,7 +121,7 @@ export default class FlowFreeSolver extends Component {
                     <ButtonGroup className="btn">
                         {navButtons}
                         <Button variant="secondary" 
-                        onClick={() => this.refreshButtonOnClick()}>Refresh</Button>
+                        onClick={() => this.refreshButtonOnClick()}>Clear Board</Button>
                     </ButtonGroup>
                 </div>
                 <div >
