@@ -4,13 +4,13 @@ export default class constructClauses {
     
     constructor(nodes, c) {
         this.diff = [[0, 1], [1, 0], [-1, 0], [0, -1]];
-        this.directions = {0: [[0, 1], [0, -1]],
-            1: [[1, 0], [-1, 0]],
-            2: [[-1, 0], [0, -1]],
-            3: [[-1, 0], [0, 1]],
-            4: [[1, 0], [0, -1]],
-            5: [[1, 0], [0, 1]]
-            };
+        this.directions = [[[0, 1], [0, -1]],
+            [[1, 0], [-1, 0]],
+            [[-1, 0], [0, -1]],
+            [[-1, 0], [0, 1]],
+            [[1, 0], [0, -1]],
+            [[1, 0], [0, 1]]
+            ];
             this.nodes = nodes;
             this.c = c;
             this.n = this.nodes.length * this.nodes.length * this.c;
@@ -37,13 +37,12 @@ export default class constructClauses {
 
     getCell(x, y, color) {
         const {length, c} = this;
-        let val = (x * length * c) + (y * c) + color + 1
-        return val;
+        return (x * length * c) + (y * c) + color + 1;
     }
 
     getDirection(x, y, type) {
         const {length, c, n} = this;
-        return n + (x * length * c) + (y * c) + type + 1;
+        return n + (x * length * 6) + (y * 6) + type + 1;
     }
 
     addSingleDirectionClause(i, j) {
@@ -69,15 +68,25 @@ export default class constructClauses {
         return ret;
     }
 
+    coordinateContainedWithin(item, array) {
+        let ret = false;
+        array.forEach(element => {
+            if(item[0] === element[0] && item[1] === element[1]) {
+                ret = true;
+            }
+        });
+        return ret;
+    }
+
     addDirectionAvoidanceClause(i, j, t) {
         let {cnf} = this;
         const {c} = this;
         const avoid = this.avoidNeighborCells(i, j, t);
         this.getAdjacentNeighbors(i, j).forEach(cell => {
-            if(!avoid.includes(i)) {
+            if(!this.coordinateContainedWithin(cell, avoid)) {
                 for(let color = 0; color < c; color++) {
                     cnf.push([this.getDirection(i, j, t) * -1, this.getCell(i, j, color) * -1,
-                    this.getCell(cell[0], cell[1], t) * -1]);
+                    this.getCell(cell[0], cell[1], color) * -1]);
                 }
             }
         });
@@ -222,7 +231,7 @@ export default class constructClauses {
                 if(n === 0) {
                     this.addCellClause(i, j);
                 }else {
-                    this.addEndpointClause(i, j, n);
+                    this.addEndpointClause(i, j, n-1);
                 }
             })
         });

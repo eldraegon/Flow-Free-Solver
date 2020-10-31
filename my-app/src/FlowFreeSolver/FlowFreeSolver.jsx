@@ -110,6 +110,9 @@ export default class FlowFreeSolver extends Component {
             var test = new solver(nodes, (maxEndpoint - length) / 2);
             test.generateClauses();
             console.log(test.cnf);
+            console.log(test.n);
+            console.log(test.c);
+            console.log(test.length);
         }
     }
     render() {
