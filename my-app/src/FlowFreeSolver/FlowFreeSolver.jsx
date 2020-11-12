@@ -148,8 +148,8 @@ export default class FlowFreeSolver extends Component {
                     })}
                 </div>
                 <Button 
-                className="btn" 
-                variant="primary" 
+                className="btn"
+                variant="primary"
                 onClick={() => this.solve()}>Solve!</Button>
             </div>
         );

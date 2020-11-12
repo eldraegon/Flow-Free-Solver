@@ -24,7 +24,7 @@ export default class constructClauses {
 
     getAdjacentNeighbors(i, j) {
         const {length} = this;
-        let ret = [];
+        const ret = [];
         this.diff.forEach(element => {
             let differenceX = i + element[0];
             let differenceY = j + element[1];
@@ -41,13 +41,13 @@ export default class constructClauses {
     }
 
     getDirection(x, y, type) {
-        const {length, c, n} = this;
+        const {length, n} = this;
         return n + (x * length * 6) + (y * 6) + type + 1;
     }
 
     addSingleDirectionClause(i, j) {
-        let {cnf} = this;
-        let clause = [];
+        const {cnf} = this;
+        const clause = [];
         for(let t = 0; t < 6; t++) {
             clause.push(this.getDirection(i, j, t));
         }
@@ -61,7 +61,7 @@ export default class constructClauses {
 
     avoidNeighborCells(i, j, t) {
         const delta = this.directions[t];
-        let ret = [];
+        const ret = [];
         delta.forEach(d => {
             ret.push([i + d[0], j + d[1]]);
         });
@@ -79,8 +79,7 @@ export default class constructClauses {
     }
 
     addDirectionAvoidanceClause(i, j, t) {
-        let {cnf} = this;
-        const {c} = this;
+        const {c, cnf} = this;
         const avoid = this.avoidNeighborCells(i, j, t);
         this.getAdjacentNeighbors(i, j).forEach(cell => {
             if(!this.coordinateContainedWithin(cell, avoid)) {
@@ -93,8 +92,7 @@ export default class constructClauses {
     }
 
     addLRClause(i, j) {
-        const {length} = this;
-        let {cnf} = this;
+        const {length, cnf} = this;
         if(0 <= j - 1 && j - 1 < length && 0 <= j + 1 && j + 1 < length) {
             this.addDirectionTypeClause(0, [i, j], [i, j-1], [i, j+1]);
             this.addDirectionAvoidanceClause(i, j, 0);
@@ -104,8 +102,7 @@ export default class constructClauses {
     }
     
     addTBClause(i, j) {
-        const {length} = this;
-        let {cnf} = this;
+        const {length, cnf} = this;
         if(0 <= i - 1 && i - 1 < length && 0 <= i + 1 && i + 1 < length) {
             this.addDirectionTypeClause(1, [i, j], [i-1, j], [i+1, j]);
             this.addDirectionAvoidanceClause(i, j, 1);
@@ -115,8 +112,7 @@ export default class constructClauses {
     }
 
     addTLClause(i, j) {
-        const {length} = this;
-        let {cnf} = this;
+        const {length, cnf} = this;
         if(0 <= i - 1 && i - 1 < length && 0 <= j - 1 && j - 1 < length) {
             this.addDirectionTypeClause(2, [i, j], [i-1, j], [i, j-1]);
             this.addDirectionAvoidanceClause(i, j, 2);
@@ -126,8 +122,7 @@ export default class constructClauses {
     }
 
     addTRClause(i, j) {
-        const {length} = this;
-        let {cnf} = this;
+        const {length, cnf} = this;
         if(0 <= i - 1 && i - 1 < length && 0 <= j + 1 && j + 1 < length) {
             this.addDirectionTypeClause(3, [i, j], [i-1, j], [i, j+1]);
             this.addDirectionAvoidanceClause(i, j, 3);
@@ -137,8 +132,7 @@ export default class constructClauses {
     }
 
     addBLClause(i, j) {
-        const {length} = this;
-        let {cnf} = this;
+        const {length, cnf} = this;
         if(0 <= i + 1 && i + 1 < length && 0 <= j - 1 && j - 1 < length) {
             this.addDirectionTypeClause(4, [i, j], [i+1, j], [i, j-1]);
             this.addDirectionAvoidanceClause(i, j, 4);
@@ -148,8 +142,7 @@ export default class constructClauses {
     }
 
     addBRClause(i, j) {
-        const {length} = this;
-        let {cnf} = this;
+        const {length, cnf} = this;
         if(0 <= i + 1 && i + 1 < length && 0 <= j + 1 && j + 1 < length) {
             this.addDirectionTypeClause(5, [i, j], [i+1, j], [i, j+1]);
             this.addDirectionAvoidanceClause(i, j, 5);
@@ -159,9 +152,8 @@ export default class constructClauses {
     }
     
     addDirectionTypeClause(t, coord1, coord2, coord3) { //TODO ensure correctness
-        let {cnf} = this;
-        const {c} = this;
-        let [i1, j1, i2, j2, i3, j3] = [coord1[0], coord1[1], coord2[0], coord2[1], coord3[0], coord3[1]];
+        const {c, cnf} = this;
+        const [i1, j1, i2, j2, i3, j3] = [coord1[0], coord1[1], coord2[0], coord2[1], coord3[0], coord3[1]];
         for(let color = 0; color < c; color++) {
             cnf.push([this.getDirection(i1, j1, t) * -1, this.getCell(i1, j1, color) * -1, 
             this.getCell(i2, j2, color)]);
@@ -185,8 +177,7 @@ export default class constructClauses {
     }
 
     addCellClause(i, j) {
-        let {cnf} = this;
-        const {c} = this;
+        const {c, cnf} = this;
         let clause = []
         for(let k = 0; k < this.c; k++) {
             clause.push(this.getCell(i, j, k));
@@ -201,15 +192,14 @@ export default class constructClauses {
     }
 
     addEndpointClause(i, j, color) {
-        let {cnf} = this;
-        const {c} = this;
+        const {c, cnf} = this;
         cnf.push([this.getCell(i, j, color)]);
         for(let k = 0; k < c; k++) {
             if(k !== color) {
                 cnf.push([this.getCell(i, j, k) * -1]);
             }
         }
-        let clause = [];
+        const clause = [];
         this.getAdjacentNeighbors(i, j).forEach(coordinates => {
             clause.push(this.getCell(coordinates[0], coordinates[1], color));
         });
@@ -238,8 +228,8 @@ export default class constructClauses {
     }
 
     bfs(i, j) {
-        let {visited, output} = this;
-        let queue = [];
+        const {visited, output} = this;
+        const queue = [];
         queue.push([i, j, []]);
         while(queue.length !== 0) {
             let currentNode = queue.shift();
@@ -257,8 +247,7 @@ export default class constructClauses {
     }
 
     constructCycleClauses(value) {
-        const {length, output} = this;
-        let {clauses} = this;
+        const {length, output, clauses} = this;
         for(let i = 0; i < length; i++) {
             for(let j = 0; j < length; j++) {
                 if(output[i][j] === value) {
@@ -269,8 +258,7 @@ export default class constructClauses {
     }
 
     detectCycles() {
-        const {length} = this;
-        let {visited} = this;
+        const {length, visited} = this;
         visited = [];
         this.clauses = [];
         for(let i = 0; i < length; i++) {
@@ -289,6 +277,8 @@ export default class constructClauses {
 
     solve() {
         this.generateClauses();
+        const {cnf, length, c} = this;
+        this.solution = new SAT(cnf, length, c);
     }
 
 
