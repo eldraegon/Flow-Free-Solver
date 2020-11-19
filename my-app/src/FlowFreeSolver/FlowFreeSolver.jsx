@@ -108,7 +108,7 @@ export default class FlowFreeSolver extends Component {
         if(length % 2 !== 0 || length === maxEndpoint) {
             this.appendAlert("Invalid Endpoint Configuration!", "danger");
         }else {
-            var test = new solver(nodes, (maxEndpoint - length) / 2);
+            let test = new solver(nodes, (maxEndpoint - length) / 2);
             test.generateClauses();
             console.log(test.cnf);
             console.log(test.n);
@@ -135,13 +135,13 @@ export default class FlowFreeSolver extends Component {
                                 {row.map((node, nodeIdx) => {
                                     const {n} = node;
                                     return (
-                                        <Node 
+                                        <Node
                                         row={rowIdx}
                                         col={nodeIdx}
                                         key={nodeIdx}
                                         size={length}
                                         n={n}
-                                        onClick={(row, col) => this.onClick(row, col)}></Node>
+                                        onClick={(row, col) => this.onClick(row, col)}/>
                                     );
                                 })}
                             </div>
