@@ -1,4 +1,3 @@
-import SAT from "./SAT"
 
 export default class constructClauses {
     
@@ -258,7 +257,8 @@ export default class constructClauses {
     }
 
     detectCycles() {
-        const {length, visited} = this;
+        const {length} = this;
+        let {visited} = this;
         visited = [];
         this.clauses = [];
         for(let i = 0; i < length; i++) {
@@ -278,8 +278,5 @@ export default class constructClauses {
     solve() {
         this.generateClauses();
         const {cnf, length, c} = this;
-        this.solution = new SAT(cnf, length, c);
     }
-
-
 }

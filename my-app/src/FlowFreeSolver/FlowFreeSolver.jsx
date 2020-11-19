@@ -62,6 +62,7 @@ export default class FlowFreeSolver extends Component {
         const {length} = this.state;
         this.createGrid(length);
         this.refreshEndpointStack();
+        this.removeAlert();
     }
 
     createGrid(length) {
@@ -124,7 +125,7 @@ export default class FlowFreeSolver extends Component {
                     <ButtonGroup className="btn">
                         {navButtons}
                         <Button variant="secondary" 
-                        onClick={() => this.refreshButtonOnClick()}>Clear Board</Button>
+                        onClick={() => this.refreshButtonOnClick()}>Clear</Button>
                     </ButtonGroup>
                 </div>
                 <div >
