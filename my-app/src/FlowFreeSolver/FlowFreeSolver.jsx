@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Node from './Node/Node'
-import solver from '../Algorithms/solver'
+import $ from 'jquery'
 import './FlowFreeSolver.css'
 import { Alert, Button, ButtonGroup } from 'react-bootstrap';
 
@@ -101,21 +101,64 @@ export default class FlowFreeSolver extends Component {
         this.setState({alert});
 
     }
-    
+
+    getCell(x, y, color, length, c) {
+        return (x * length * c) + (y * c) + color + 1
+    }
+
+    displaySolution(state, colors) {
+        const {length} = this.state;
+        const nodes = []
+        for(let x = 0; x < length; x++) {
+            const row = []
+            for(let y = 0; y < length; y++) {
+                for(let c = 0; c < colors; c++) {
+                    if(state.includes(this.getCell(x, y, c, length, colors))) {
+                        row.push({
+                            x,
+                            y,
+                            n: c+1
+                        })
+                    }
+                }
+            }
+            nodes.push(row)
+        }
+        this.setState({nodes});
+    }
+
     solve() {
         const {endpointStack, nodes, maxEndpoint} = this.state;
         const {length} = endpointStack;
         if(length % 2 !== 0 || length === maxEndpoint) {
             this.appendAlert("Invalid Endpoint Configuration!", "danger");
-        }else {
-            let test = new solver(nodes, (maxEndpoint - length) / 2);
-            test.generateClauses();
-            console.log(test.cnf);
-            console.log(test.n);
-            console.log(test.c);
-            console.log(test.length);
+            return;
         }
+        const endpoints = []
+        nodes.forEach(row => {
+            row.forEach(node => {
+                if(node.n !== 0) {
+                    const {row, col, n} = node
+                    endpoints.push([row, col, n])
+                }
+            })
+        })
+        const state = {
+            length: nodes.length,
+            colors: (maxEndpoint - length) / 2,
+            nodes: endpoints
+        }
+        fetch('https://flowsolver.azurewebsites.net/api/solve', {
+            method: 'POST',
+            body: JSON.stringify(state),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            }
+        })
+        .then(response => response.json())
+        .then(json => this.displaySolution(json['nodes'], state['colors']))
     }
+
     render() {
         const {nodes, length, navButtons, alert} = this.state;
         return (

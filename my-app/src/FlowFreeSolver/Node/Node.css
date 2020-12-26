@@ -3,6 +3,7 @@
     height: 70px;
     outline: 1px solid grey;
     display: inline-block;
+    margin-top: -5px;
 }
 .lg {
     width: 100px;

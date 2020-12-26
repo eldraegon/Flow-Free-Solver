@@ -150,9 +150,9 @@ export default class constructClauses {
         }
     }
     
-    addDirectionTypeClause(t, coord1, coord2, coord3) { //TODO ensure correctness
+    addDirectionTypeClause(t, coordinate1, coordinate2, coordinate3) { //TODO ensure correctness
         const {c, cnf} = this;
-        const [i1, j1, i2, j2, i3, j3] = [coord1[0], coord1[1], coord2[0], coord2[1], coord3[0], coord3[1]];
+        const [i1, j1, i2, j2, i3, j3] = [coordinate1[0], coordinate1[1], coordinate2[0], coordinate2[1], coordinate3[0], coordinate3[1]];
         for(let color = 0; color < c; color++) {
             cnf.push([this.getDirection(i1, j1, t) * -1, this.getCell(i1, j1, color) * -1, 
             this.getCell(i2, j2, color)]);
