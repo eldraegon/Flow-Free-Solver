@@ -10,7 +10,9 @@
     padding: 0px;
 }
 .grid {
-    padding: 0px;
     margin-left: auto;
     margin-right: auto;
+}
+#solvebtn {
+    margin: 1%;
 }

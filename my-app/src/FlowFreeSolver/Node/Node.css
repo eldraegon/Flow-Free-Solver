@@ -1,9 +1,25 @@
+svg {
+    width: inherit;
+    height: inherit;
+}
 .node {
     width: 70px;
     height: 70px;
-    outline: 1px solid grey;
     display: inline-block;
-    margin-top: -5px;
+}
+.grid {
+    outline: 1px solid grey;
+}
+.animationgridfade {
+    animation: gridfade 2s linear;
+}
+@keyframes gridfade {
+    from {
+        outline: 1px solid grey;
+    }
+    to {
+        outline: 0px;
+    }
 }
 .lg {
     width: 100px;
@@ -37,4 +53,10 @@
 }
 .colorGrey {
     background-color: grey;
+}
+.colorCyan {
+    background-color: cyan;
+}
+.colorPurple {
+    background-color: purple;
 }
