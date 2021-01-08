@@ -15,6 +15,13 @@ export default class Node extends Component {
                 "yellow",
                 "white",
                 "grey",
+                "cyan",
+                "pink",
+                "brown",
+                "purple",
+                "lawngreen",
+                "darkmagenta",
+                "khaki"
             ],
             size: {
                 "sm": 50,
@@ -175,7 +182,7 @@ export default class Node extends Component {
         if(gridFade !== "") {
             grid = "";
         }
-        const gridSize = size < 8? "lg" : size < 11? "md" : "sm";
+        const gridSize = size < 9? "lg" : size < 12? "md" : "sm";
         return <div className={`node ${gridSize} ${gridFade} ${grid}`}
         onClick={() => onClick(row, col)}>
             <svg>
