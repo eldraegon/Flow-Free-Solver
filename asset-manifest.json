@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/Flow-Free-Solver/static/css/main.9e244923.chunk.css",
-    "main.js": "/Flow-Free-Solver/static/js/main.c617fc10.chunk.js",
-    "main.js.map": "/Flow-Free-Solver/static/js/main.c617fc10.chunk.js.map",
+    "main.js": "/Flow-Free-Solver/static/js/main.86679cdb.chunk.js",
+    "main.js.map": "/Flow-Free-Solver/static/js/main.86679cdb.chunk.js.map",
     "runtime-main.js": "/Flow-Free-Solver/static/js/runtime-main.db29431e.js",
     "runtime-main.js.map": "/Flow-Free-Solver/static/js/runtime-main.db29431e.js.map",
     "static/css/2.95f25948.chunk.css": "/Flow-Free-Solver/static/css/2.95f25948.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.95f25948.chunk.css",
     "static/js/2.5f8466e2.chunk.js",
     "static/css/main.9e244923.chunk.css",
-    "static/js/main.c617fc10.chunk.js"
+    "static/js/main.86679cdb.chunk.js"
   ]
 }
