@@ -177,15 +177,22 @@ export default class Node extends Component {
     }
 
     render() {
-        const {size, row, col, onClick, gridFade} = this.props;
+        const {size, row, col, onClick, gridFade, animationTime} = this.props;
         let grid = "grid";
         if(gridFade !== "") {
             grid = "";
         }
+        let style = {};
+        if(animationTime !== undefined) {
+            style = {
+                "animation": `fadein 1s ease-in`,
+                "animationDelay": animationTime
+            }
+        }
         const gridSize = size < 9? "lg" : size < 12? "md" : "sm";
         return <div className={`node ${gridSize} ${gridFade} ${grid}`}
         onClick={() => onClick(row, col)}>
-            <svg>
+            <svg style={style}>
                 {this.constructSVG(gridSize)}
             </svg>
         </div>;

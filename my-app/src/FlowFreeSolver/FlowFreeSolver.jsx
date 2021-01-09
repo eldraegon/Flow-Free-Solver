@@ -155,58 +155,80 @@ export default class FlowFreeSolver extends Component {
         return false;
     }
 
-    includes(endpoints, x, y, c) {
+    includes(arr, x, y) {
         var ret = false;
-        endpoints.forEach(([X, Y, C]) => {
-            if(x === X && y === Y && c === C) {
+        arr.forEach(([X, Y]) => {
+            if(x === X && y === Y) {
                 ret = true;
             }
         })
         return ret;
     }
 
-    displaySolution(state, colors, endpoints) {
-        const {length, diff} = this.state;
-        const nodes = []
-        for(let x = 0; x < length; x++) {
-            const row = []
-            for(let y = 0; y < length; y++) {
-                for(let c = 0; c < colors; c++) {
-                    if(state.includes(this.getCell(x, y, c, length, colors))) {
-                        row.push({
-                            x,
-                            y,
-                            n: c+1,
-                            isEndpoint: this.includes(endpoints, x, y, c+1),
-                            direction: this.getDirectionType(x, y, colors, length, state, endpoints),
-                            endpointDirection: -1,
-                            gridFade: "animationgridfade"
-                        });
-                    }
-                }
+    findAdjacentNeighbour(x, y, n, colors, state, visited) {
+        const {diff, length} = this.state;
+        let ret = undefined;
+        diff.forEach(([dx, dy]) => {
+            if(!this.includes(visited, x+dx, y+dy) && this.checkWithinBounds(x+dx, y+dy, length) && state.includes(this.getCell(x+dx, y+dy, n-1, length, colors))) {
+                ret = [x+dx, y+dy, n];
             }
-            nodes.push(row);
+        });
+        return ret;
+    }
+
+    displaySolution(state, colors, endpoints) {
+        if(state === "UNSAT") {
+            this.appendAlert("No solution found!", "warning");
+            return;
         }
+        this.setState({disabled: true});
+        const {length, diff, nodes} = this.state;
+        const queue = [];
+        const visited = [];
         endpoints.forEach(([x, y, n]) => {
+            visited.push([x, y]);
             diff.forEach(([dx, dy], i) => {
-                if(this.checkWithinBounds(x+dx, y+dy, length) && nodes[x+dx][y+dy].n === n) {
+                if(this.checkWithinBounds(x+dx, y+dy, length) && state.includes(this.getCell(x+dx, y+dy, n-1, length, colors))) {
                     nodes[x][y].endpointDirection = i;
+                    nodes[x][y].gridFade = "animationgridfade";
                 }
             });
         });
-        console.log(nodes);
-        this.setState({nodes, disabled: true});
+        endpoints.forEach(([x, y, n]) => { //start of bfs
+            queue.push(this.findAdjacentNeighbour(x, y, n, colors, state, visited));
+        });
+        let time = 1;
+        let count = 0;
+        while(queue.length !== 0) {
+            const curr = queue.shift();
+            if(curr === undefined) {
+                continue;
+            }
+            const [x, y, n] = curr;
+            visited.push([x, y]);
+            nodes[x][y].n = n;
+            nodes[x][y].direction = this.getDirectionType(x, y, colors, length, state, endpoints);
+            nodes[x][y].gridFade = "animationgridfade";
+            nodes[x][y].animationTime = time;
+            count++;
+            if(count === length) {
+                count = 0;
+                time += 1;
+            }
+            queue.push(this.findAdjacentNeighbour(x, y, n, colors, state, visited));
+        }
+        this.setState({nodes});
     }
 
     solve() {
-        $("#solvebtn").prop({'disabled': true})
-        $("#clear").prop({class: 'btn btn-danger'})
         const {endpointStack, nodes, maxEndpoint} = this.state;
         const {length} = endpointStack;
         if(length % 2 !== 0 || length === maxEndpoint) {
             this.appendAlert("Invalid Endpoint Configuration!", "danger");
             return;
         }
+        $("#solvebtn").prop({'disabled': true})
+        $("#clear").prop({class: 'btn btn-danger'})
         const endpoints = []
         nodes.forEach(row => {
             row.forEach(node => {
@@ -250,7 +272,7 @@ export default class FlowFreeSolver extends Component {
                         return(
                             <div key={rowIdx}>
                                 {row.map((node, nodeIdx) => {
-                                    const {n, isEndpoint, direction, endpointDirection, gridFade} = node;
+                                    const {n, isEndpoint, direction, endpointDirection, gridFade, animationTime} = node;
                                     return (
                                         <Node
                                         row={rowIdx}
@@ -261,6 +283,7 @@ export default class FlowFreeSolver extends Component {
                                         endpointDirection={endpointDirection}
                                         size={length}
                                         gridFade={gridFade}
+                                        animationTime={animationTime}
                                         n={n}
                                         onClick={(row, col) => this.onClick(row, col)}/>
                                     );
